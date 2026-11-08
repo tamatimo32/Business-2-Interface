@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-ai-appliance-backend"
+dynamic = ["version"]
+description = "Offline-first backend for a configurable local AI appliance"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.162.2",
+    "uvicorn==0.54.0",
+    "pydantic==2.14.3",
+    "pydantic-settings==2.16.2",
+    "SQLAlchemy[asyncio]==2.0.46",
+    "aiosqlite==0.22.1",
+    "alembic==1.18.4",
+    "httpx==0.28.1",
+    "structlog==26.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.2",
+    "pytest-asyncio==1.3.0",
+    "asgi-lifespan==2.1.0",
+    "ruff==0.15.0",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "app._version.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-ra --strict-markers --import-mode=importlib"
+filterwarnings = ["error"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC", "S"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S106"]
+"app/core/config.py" = ["S105"]
